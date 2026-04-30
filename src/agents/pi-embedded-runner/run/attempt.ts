@@ -2666,6 +2666,7 @@ export async function runEmbeddedAttempt(
               messages: btwSnapshotMessages,
               inFlightPrompt: promptSubmission.prompt,
             });
+	    log.debug(`[LLM_SEND] start: runId=${params.runId} sessionId=${params.sessionId} timestamp=${Date.now()}`);
             if (promptSubmission.runtimeOnly) {
               await abortable(activeSession.prompt(promptSubmission.prompt));
             } else {

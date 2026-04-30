@@ -523,6 +523,8 @@ export function subscribeEmbeddedPiSession(params: SubscribeEmbeddedPiSessionPar
     text: string,
     state: { thinking: boolean; final: boolean; inlineCode?: InlineCodeState },
   ): string => {
+    const startTime = Date.now();
+    log.info(`[TRACE] stripBlockTags start textLength=${text.length} timestamp=${startTime}`);
     if (!text) {
       return text;
     }
@@ -616,6 +618,8 @@ export function subscribeEmbeddedPiSession(params: SubscribeEmbeddedPiSessionPar
     // missed (e.g. nested tags or hallucinations) to prevent leakage.
     const resultCodeSpans = buildCodeSpanIndex(result, inlineStateStart);
     state.inlineCode = resultCodeSpans.inlineState;
+    const endTime = Date.now();
+    log.info(`[TRACE] stripBlockTags end textLength=${text.length} durationMs=${endTime - startTime} timestamp=${endTime}`);
     return stripTagsOutsideCodeSpans(result, FINAL_TAG_SCAN_RE, resultCodeSpans.isInside);
   };
 
