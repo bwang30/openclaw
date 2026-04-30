@@ -526,6 +526,7 @@ export function subscribeEmbeddedPiSession(params: SubscribeEmbeddedPiSessionPar
     const startTime = Date.now();
     log.info(`[TRACE] stripBlockTags start textLength=${text.length} timestamp=${startTime}`);
     if (!text) {
+      log.info(`[TRACE] stripBlockTags end textLength=${text.length}RdurationMs=${endTime - startTime} timestamp=${endTime}`);
       return text;
     }
 
@@ -572,7 +573,9 @@ export function subscribeEmbeddedPiSession(params: SubscribeEmbeddedPiSessionPar
     if (!params.enforceFinalTag) {
       state.inlineCode = finalCodeSpans.inlineState;
       FINAL_TAG_SCAN_RE.lastIndex = 0;
-      return stripTagsOutsideCodeSpans(processed, FINAL_TAG_SCAN_RE, finalCodeSpans.isInside);
+      out = stripTagsOutsideCodeSpans(processed, FINAL_TAG_SCAN_RE, finalCodeSpans.isInside);
+      log.info(`[TRACE] stripBlockTags end textLength=${text.length}RdurationMs=${endTime - startTime} timestamp=${endTime}`);
+      return out;
     }
 
     // If enforcement is enabled, only return text that appeared inside a <final> block.
@@ -611,6 +614,7 @@ export function subscribeEmbeddedPiSession(params: SubscribeEmbeddedPiSessionPar
     // we have seen a <final> tag. Otherwise, we leak "thinking out loud" text
     // (e.g. "**Locating Manulife**...") that the model emitted without <think> tags.
     if (!everInFinal) {
+      log.info(`[TRACE] stripBlockTags end textLength=${text.length}RdurationMs=${endTime - startTime} timestamp=${endTime}`);
       return "";
     }
 
@@ -619,8 +623,9 @@ export function subscribeEmbeddedPiSession(params: SubscribeEmbeddedPiSessionPar
     const resultCodeSpans = buildCodeSpanIndex(result, inlineStateStart);
     state.inlineCode = resultCodeSpans.inlineState;
     const endTime = Date.now();
-    log.info(`[TRACE] stripBlockTags end textLength=${text.length} durationMs=${endTime - startTime} timestamp=${endTime}`);
-    return stripTagsOutsideCodeSpans(result, FINAL_TAG_SCAN_RE, resultCodeSpans.isInside);
+    out = stripTagsOutsideCodeSpans(result, FINAL_TAG_SCAN_RE, resultCodeSpans.isInside);
+    log.info(`[TRACE] stripBlockTags end textLength=${text.length}RdurationMs=${endTime - startTime} timestamp=${endTime}`);
+    return out;
   };
 
   const stripTagsOutsideCodeSpans = (
