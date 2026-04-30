@@ -811,6 +811,7 @@ export async function handleToolExecutionEnd(
     result?: unknown;
   },
 ) {
+  ctx.log.info(`[TRACE] tool_result_send_to_llm start: runId=${ctx.params.runId} tool=${evt.toolName} toolCallId=${evt.toolCallId} timestamp=${Date.now()}`);
   const rawToolName = evt.toolName;
   const toolName = normalizeToolName(rawToolName);
   const toolCallId = evt.toolCallId;
