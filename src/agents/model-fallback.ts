@@ -746,6 +746,7 @@ export async function runWithModelFallback<T>(params: {
   onFallbackStep?: ModelFallbackStepHandler;
   classifyResult?: ModelFallbackResultClassifier<T>;
 }): Promise<ModelFallbackRunResult<T>> {
+  log.info(`runWithModelFallback run ${params.runId})`);
   const candidates = resolveFallbackCandidates({
     cfg: params.cfg,
     provider: params.provider,

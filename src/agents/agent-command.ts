@@ -1224,6 +1224,7 @@ export async function agentCommandFromIngress(
   runtime: RuntimeEnv = defaultRuntime,
   deps?: CliDeps,
 ) {
+  log.info(`agentCommandFromIngress run`);
   if (typeof opts.senderIsOwner !== "boolean") {
     // HTTP/WS ingress must declare the trust level explicitly at the boundary.
     // This keeps network-facing callers from silently picking up the local trusted default.
